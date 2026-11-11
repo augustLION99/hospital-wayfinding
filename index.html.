@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exploring Sign System Design for a Medical Facility</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --secondary: #0f766e;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            border-top: 5px solid var(--primary);
+        }
+
+        .journal-tag {
+            display: inline-block;
+            background: #dbeafe;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #0f172a;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        .authors {
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+        }
+
+        .abstract-box {
+            background: #f1f5f9;
+            padding: 1.5rem;
+            border-left: 4px solid var(--primary-light);
+            border-radius: 0 8px 8px 0;
+            font-size: 0.95rem;
+        }
+
+        .abstract-box h3 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        .tab-btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            background: none;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn:hover {
+            background: var(--border);
+            color: var(--text);
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 0.5rem;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .card {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            background: #fafafa;
+        }
+
+        .card h4 {
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: #f1f5f9;
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        .stat-badge {
+            background: #e0e7ff;
+            color: #3730a3;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .color-legend {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .color-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .color-box {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <span class="journal-tag">Buildings 2023, 13, 1366 — MDPI Article</span>
+            <h1>Exploring Sign System Design for a Medical Facility: A Virtual Environment Study on Wayfinding Behaviors</h1>
+            <div class="authors">
+                <strong>Authors:</strong> Ching-Yuan Wang, Ching-I Chen, and Meng-Cong Zheng* (National Taiwan University of Technology)
+            </div>
+            <div class="abstract-box">
+                <h3>Abstract Summary</h3>
+                <p>The West Campus of National Taiwan University Hospital (NTUH) is a historic municipal monument facing significant indoor wayfinding challenges. Due to architectural preservation constraints, modifying the physical layout is restricted. This study utilized Blender and Unity 3D to build digital-twin virtual environments, conducting 12 wayfinding tasks across 64 participants divided into pretest (existing signage) and posttest (redesigned signage with/without color coding) groups to evaluate performance, anxiety, readability, and sign validity.</p>
+            </div>
+        </header>
+
+        <nav class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('overview')">Overview & Background</button>
+            <button class="tab-btn" onclick="switchTab('methodology')">Methodology & VR</button>
+            <button class="tab-btn" onclick="switchTab('redesign')">Sign Redesign</button>
+            <button class="tab-btn" onclick="switchTab('results')">Experimental Results</button>
+        </nav>
+
+        <section id="overview" class="tab-content active">
+            <h2>1. Background & Objectives</h2>
+            <p>Wayfinding in unfamiliar and complex medical facilities creates stress, confusion, and anxiety while increasing unnecessary staff interruptions. NTUH West Campus suffers from structural complexity and visual clutter caused by historical additions and inconsistent signage.</p>
+            
+            <div class="grid-2">
+                <div class="card">
+                    <h4>Key Challenges in NTUH West Campus</h4>
+                    <ul>
+                        <li>Historic municipal monument status restricts physical architectural alterations.</li>
+                        <li>Symmetrical Baroque building layout increases cognitive load due to lack of distinct indoor landmarks.</li>
+                        <li>Visual crowding caused by auxiliary pasted signs over time.</li>
+                        <li>Inconsistent directional arrows and fragmented information between wall and hanging signs.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Study Objectives</h4>
+                    <ul>
+                        <li>Develop a 1:1 Digital Twin virtual environment using Blender and Unity 3D.</li>
+                        <li>Assess visitor wayfinding behavior and identify weak points in the existing sign system.</li>
+                        <li>Propose standardized signage principles (hanging, wall, and color-coded).</li>
+                        <li>Validate the redesigned sign system through quantitative posttest experiments.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="methodology" class="tab-content">
+            <h2>2. Experimental Methodology</h2>
+            <p>The study implemented a multi-stage experiment with 64 participants aged 20–39, divided into pretest (32 participants) and posttest (32 participants) cohorts.</p>
+
+            <div class="grid-2">
+                <div class="card">
+                    <h4>Virtual Environment Setup</h4>
+                    <p>Built using <strong>Blender</strong> for 3D layout modeling and <strong>Unity 3D</strong> for first-person view (FPV) movement. Participants navigated via keyboard arrows and mouse rotation at a constant movement speed.</p>
+                </div>
+                <div class="card">
+                    <h4>Task & Assessment Structure</h4>
+                    <p>Participants completed 12 total tasks across 2 scenario routes (including floor transitions). Metrics collected include:</p>
+                    <ul>
+                        <li>Task Completion Time (seconds)</li>
+                        <li>Valid Rate of Viewed Signs (Valid / Total viewed)</li>
+                        <li>Wayfinding Anxiety & Readability (5-point Likert)</li>
+                        <li>Overall Environmental Assessment (4-point Likert)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="redesign" class="tab-content">
+            <h2>3. Sign System Redesign</h2>
+            <p>The optimized signage design focused on legibility, consistent categorization, and standardized directional visual cues.</p>
+
+            <div class="color-legend">
+                <div class="color-item"><div class="color-box" style="background:#ef4444;"></div> Red: Outpatient Services</div>
+                <div class="color-item"><div class="color-box" style="background:#3b82f6;"></div> Blue: Laboratory Services</div>
+                <div class="color-item"><div class="color-box" style="background:#10b981;"></div> Green: Forward / Transport Services</div>
+                <div class="color-item"><div class="color-box" style="background:#eab308;"></div> Yellow: Medical Administrative Services</div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sign Type</th>
+                        <th>Pretest Baseline (Existing)</th>
+                        <th>Posttest Redesign (Optimized)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Hanging-Style Signs</strong></td>
+                        <td>Inconsistent text spacing, mixed brown/black backgrounds, irregular interspersed icons.</td>
+                        <td>Uniform high-contrast white text on black background, categorized into Outpatient, Medical, Lab, and Wards.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Wall Signs</strong></td>
+                        <td>Duplicate signs, conflicting sizes and font styles across corridors.</td>
+                        <td>Standardized corridor codes and direction guides. Unified grey background with white text for lower auxiliary wall signs.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Floor Guidance</strong></td>
+                        <td>Sparse or missing floor indicators near staircases and elevators.</td>
+                        <td>Clear columnar floor destination guides placed directly at staircase/elevator entry points.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="results" class="tab-content">
+            <h2>4. Experimental Results & Findings</h2>
+            <p>The redesigned sign system demonstrated significant improvements in completion time, sign validity, and user confidence.</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Task Metric</th>
+                        <th>Pretest (Existing)</th>
+                        <th>Posttest (Redesigned)</th>
+                        <th>Statistical Significance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Average Task Time</strong></td>
+                        <td>89.3 s</td>
+                        <td>48.6 s</td>
+                        <td><span class="stat-badge">p < 0.001</span> (Significant speedup in 9 tasks)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Average Valid Rate</strong></td>
+                        <td>Moderate to Low</td>
+                        <td>Significantly Higher</td>
+                        <td><span class="stat-badge">p < 0.05</span> (Higher guiding efficiency in 7 tasks)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>User Anxiety Score</strong></td>
+                        <td>Higher (Up to 3.84 in T10)</td>
+                        <td>Substantially Lower</td>
+                        <td><span class="stat-badge">p < 0.01</span> (Reduced anxiety in 7 tasks)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sign Readability</strong></td>
+                        <td>Lower (Down to 1.69 in T7)</td>
+                        <td>Higher (Up to 4.69 in T5)</td>
+                        <td><span class="stat-badge">p < 0.001</span> (Improved readability in 11 tasks)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="card" style="margin-top: 1.5rem;">
+                <h4>Key Conclusions & Design Recommendations</h4>
+                <ul>
+                    <li><strong>Hanging Signs as Primary Drivers:</strong> Unfamiliar visitors rely heavily on ceiling-suspended signs for initial path selection.</li>
+                    <li><strong>Coherent Information Chains:</strong> Missing or ambiguous intermediate signs trigger back-and-forth movement and anxiety.</li>
+                    <li><strong>Color Coding Impact:</strong> While color coding did not drastically change completion speed compared to layout optimization, 87.5% of posttest users expressed a strong preference for color-coded systems.</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+    </script>
+</body>
+</html>
